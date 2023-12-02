@@ -1,18 +1,48 @@
+use std::collections::HashMap;
+
 fn main() {
     let input1 = include_str!("./input1.txt");
     part_1(input1);
 }
 
 fn part_1(input: &str) -> String {
-    todo!()
+    let mut sum = 0;
+    for line in input.lines() {
+        let val = parse_line(line);
+        sum += val;
+    }
+    println!("{sum}");
+    sum.to_string()
 }
 
 fn part_2(input: &str) -> String {
     todo!()
 }
 
-fn parse_line(line: &str) -> i32 {
-    todo!()
+fn parse_line(line: &str) -> u32 {
+    let game_map: HashMap<&str, u32> = HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
+    let split: Vec<&str> = line.split(':').collect();
+    let mut id = split[0]
+        .trim()
+        .split_whitespace()
+        .last()
+        .unwrap()
+        .parse::<u32>()
+        .unwrap();
+    let games: Vec<&str> = split[1].trim().split(';').map(|s| s.trim()).collect();
+    for game in games {
+        let balls: Vec<&str> = game.split(',').map(|s| s.trim()).collect();
+        for ball in balls {
+            let val: Vec<&str> = ball.split_whitespace().collect();
+            let num = val[0].parse::<u32>().unwrap();
+            let colour = val[1];
+            let allowed = game_map.get(colour).unwrap();
+            if allowed < &num {
+                id = 0;
+            }
+        }
+    }
+    id
 }
 
 #[cfg(test)]
