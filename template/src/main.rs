@@ -1,3 +1,5 @@
+const EXAMPLE_TEXT: &str = "";
+
 fn main() {
     let input1 = include_str!("./input1.txt");
     part_1(input1);
@@ -6,49 +8,21 @@ fn main() {
 }
 
 fn part_1(input: &str) -> String {
-    parse_line(input);
-    "".to_string()
+    let output = process_2(input);
+    output
 }
 fn part_2(input: &str) -> String {
+    let output = process_1(input);
+    output
+}
+
+fn process_1(input: &str) -> String {
     "".to_string()
 }
 
-#[derive(Debug)]
-struct SymbolLoc {
-    symbol: char,
-    i: usize,
-    j: usize,
+fn process_2(input: &str) -> String {
+    "".to_string()
 }
-
-struct NumLoc {
-    num: u32,
-    i: usize,
-    j: usize,
-}
-
-fn parse_line(input: &str) -> () {
-    let mut symbol_locs: Vec<SymbolLoc> = Vec::new();
-    let mut num_locs: Vec<NumLoc> = Vec::new();
-    // input
-    //     .lines()
-    //     .enumerate()
-    //     .map(|(j, line)| line.chars().enumerate().filter(|(i, c)| *c != '.'));
-    for (j, line) in input.lines().enumerate() {
-        for (i, c) in line.chars().enumerate() {
-            if c.is_ascii_punctuation() {
-                symbol_locs.push(SymbolLoc {
-                    symbol: c,
-                    i: i,
-                    j: j,
-                })
-            }
-            if c.is_numeric() {}
-        }
-    }
-    dbg!(symbol_locs);
-}
-
-fn parse_line_2(line: &str) -> () {}
 
 #[cfg(test)]
 mod tests {
@@ -56,24 +30,12 @@ mod tests {
 
     #[test]
     fn test_1() {
-        let test_input = "467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..";
-        let output = part_1(test_input);
+        let output = part_1(EXAMPLE_TEXT);
         assert_eq!(output, "".to_string())
     }
     #[test]
     fn test_2() {
-        let test_input = "
-";
-        let output = part_2(test_input);
+        let output = part_2(EXAMPLE_TEXT);
         assert_eq!(output, "".to_string())
     }
 }
