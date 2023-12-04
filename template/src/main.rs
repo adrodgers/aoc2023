@@ -1,5 +1,3 @@
-const EXAMPLE_TEXT: &str = "";
-
 fn main() {
     let input1 = include_str!("./input1.txt");
     part_1(input1);
@@ -27,6 +25,7 @@ fn process_2(input: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    const EXAMPLE_TEXT: &str = "";
 
     #[test]
     fn test_1() {
