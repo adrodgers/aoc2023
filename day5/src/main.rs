@@ -1,10 +1,8 @@
-use std::collections::BTreeMap;
-
 fn main() {
     let input1 = include_str!("./input1.txt");
     part_1(input1);
-    // let input2 = include_str!("./input2.txt");
-    // part_2(input2);
+    let input2 = include_str!("./input1.txt");
+    part_2(input2);
 }
 
 fn part_1(input: &str) -> String {
@@ -29,50 +27,116 @@ fn process_1(input: &str) -> String {
         .split_whitespace()
         .map(|s| s.parse().unwrap())
         .collect();
-    dbg!(&seeds);
+    // dbg!(&seeds);
     let mut maps: Vec<Vec<Vec<u64>>> = Vec::new();
     let mut map: Vec<Vec<u64>> = Vec::new();
     let num_lines = lines.clone().count();
     for (i, line) in lines.enumerate() {
-        // dbg!(&line);
+        //     // dbg!(&line);
         if !line.contains(':') && !line.is_empty() {
             let line_data: Vec<u64> = line
                 .split_whitespace()
                 .map(|n| n.parse().unwrap())
                 .collect();
-            // dbg!(&line_data);
+            //         // dbg!(&line_data);
             map.push(line_data);
         }
         if (line.is_empty() || i == num_lines) && !map.is_empty() {
             maps.push(map.clone());
-            dbg!(&map);
+            //         dbg!(&map);
             map.clear();
         }
     }
-    dbg!(&maps.len());
+    // dbg!(&maps.len());
     for seed in seeds.iter_mut() {
-        println!("seed: ");
-        dbg!(&seed);
+        // println!("seed: ");
+        //     dbg!(&seed);
         for map in maps.iter() {
-            dbg!(&map.len());
+            //         dbg!(&map.len());
             let mut in_map = false;
             for range in map.iter() {
-                dbg!(&range);
+                //             dbg!(&range);
                 if (*seed < (range[1] + range[2])) && (*seed >= (range[1])) && !in_map {
                     *seed = range[0] + *seed - range[1];
-                    dbg!(&seed);
+                    //                 dbg!(&seed);
                     in_map = true;
                 }
             }
         }
-        dbg!(seed);
+        //     dbg!(seed);
     }
     let out = seeds.iter().min().unwrap();
     out.to_string()
 }
 
 fn process_2(input: &str) -> String {
-    "".to_string()
+    let mut lines = input.lines().into_iter();
+    let mut seed_line: Vec<u64> = lines
+        .nth(0)
+        .unwrap()
+        .split(": ")
+        .nth(1)
+        .unwrap()
+        .split_whitespace()
+        .map(|s| s.parse::<u64>().unwrap())
+        .collect();
+    let seed_ranges: Vec<[u64; 2]> = seed_line
+        .chunks(2)
+        .map(|chunk| -> [u64; 2] {
+            let mut array: [u64; 2] = [0; 2];
+            for (i, val) in chunk.iter().enumerate() {
+                array[i] = *val;
+            }
+            array
+        })
+        .collect();
+    let mut seeds: Vec<u64> = Vec::new();
+    for seed_range in seed_ranges {
+        for i in 0..seed_range[1] - 1 {
+            seeds.push(seed_range[0] + i);
+        }
+    }
+    // dbg!(&seeds);
+    println!("here!");
+    let mut maps: Vec<Vec<Vec<u64>>> = Vec::new();
+    let mut map: Vec<Vec<u64>> = Vec::new();
+    let num_lines = lines.clone().count();
+    for (i, line) in lines.enumerate() {
+        //     // dbg!(&line);
+        if !line.contains(':') && !line.is_empty() {
+            let line_data: Vec<u64> = line
+                .split_whitespace()
+                .map(|n| n.parse().unwrap())
+                .collect();
+            //         // dbg!(&line_data);
+            map.push(line_data);
+        }
+        if (line.is_empty() || i == num_lines) && !map.is_empty() {
+            maps.push(map.clone());
+            //         dbg!(&map);
+            map.clear();
+        }
+    }
+    // dbg!(&maps.len());
+    for seed in seeds.iter_mut() {
+        // println!("seed: ");
+        //     dbg!(&seed);
+        for map in maps.iter() {
+            //         dbg!(&map.len());
+            let mut in_map = false;
+            for range in map.iter() {
+                //             dbg!(&range);
+                if (*seed < (range[1] + range[2])) && (*seed >= (range[1])) && !in_map {
+                    *seed = range[0] + *seed - range[1];
+                    //                 dbg!(&seed);
+                    in_map = true;
+                }
+            }
+        }
+        //     dbg!(seed);
+    }
+    let out = seeds.iter().min().unwrap();
+    out.to_string()
 }
 
 #[cfg(test)]
@@ -122,6 +186,6 @@ humidity-to-location map:
     #[test]
     fn test_2() {
         let output = part_2(EXAMPLE_TEXT);
-        assert_eq!(output, "".to_string())
+        assert_eq!(output, "46".to_string())
     }
 }
