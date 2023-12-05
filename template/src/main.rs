@@ -6,11 +6,11 @@ fn main() {
 }
 
 fn part_1(input: &str) -> String {
-    let output = process_2(input);
+    let output = process_1(input);
     output
 }
 fn part_2(input: &str) -> String {
-    let output = process_1(input);
+    let output = process_2(input);
     output
 }
 
