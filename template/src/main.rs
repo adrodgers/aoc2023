@@ -1,17 +1,17 @@
 fn main() {
     let input1 = include_str!("./input1.txt");
-    part_1(input1);
-    // let input2 = include_str!("./input2.txt");
-    // part_2(input2);
+    let output1 = part_1(input1);
+    println!("{output1}");
+    let input2 = include_str!("./input2.txt");
+    let output2 = part_2(input2);
+    println!("{output2}");
 }
 
 fn part_1(input: &str) -> String {
-    let output = process_1(input);
-    output
+    process_1(input)
 }
 fn part_2(input: &str) -> String {
-    let output = process_2(input);
-    output
+    process_2(input)
 }
 
 fn process_1(input: &str) -> String {
