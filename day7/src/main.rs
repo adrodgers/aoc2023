@@ -121,11 +121,6 @@ fn hand_strength_p2(cards: [char; 5]) -> usize {
     for c in char_vec {
         *letter_counts.entry(c).or_insert(0) += 1;
     }
-    let js = letter_counts.get(&'J').unwrap_or(&0).to_owned() as usize;
-    if js > 0 {
-        // dbg!(&cards);
-    }
-    // dbg!(js);
     let counts: Vec<u32> = letter_counts.clone().into_values().collect();
     match (
         counts.clone().into_iter().max(),
@@ -187,21 +182,16 @@ fn process_1(input: &str) -> String {
             cards,
             bet,
         };
-        // dbg!(&hand);
         hands.push(hand)
     }
     // hands.sort();
     let mut swap_idx: Option<usize> = None;
-    // dbg!(&hands.windows(2).len());
     let mut index = 0;
     while index + 1 != hands.len() {
         for (idx, hand) in hands.windows(2).enumerate() {
             index = idx + 1;
-            // dbg!(index, hands.len());
             // println!("idx:{}, hand:{:?}", idx, hand);
             if hand[0].should_swap(&hand[1]) {
-                //             dbg!(&hand[0]);
-                //             dbg!(&hand[1]);
                 swap_idx = Some(idx);
                 break;
             }
@@ -209,12 +199,9 @@ fn process_1(input: &str) -> String {
         }
         if let Some(idx) = swap_idx {
             // println!("inside swap");
-            //         // dbg!(&hands);
             hands.swap(idx, idx + 1);
-            //         // dbg!(&hands);
         }
     }
-    // dbg!(&hands);
     let out: u32 = hands
         .iter()
         .enumerate()
@@ -241,13 +228,10 @@ fn process_2(input: &str) -> String {
             cards,
             bet,
         };
-        // dbg!(&hand);
         hands.push(hand)
     }
     // hands.sort();
     let mut swap_idx: Option<usize> = None;
-    // dbg!(&hands.windows(2).len());
-    // dbg!(&hands.len());
     let mut index = 0;
     while index + 1 != hands.len() - 1 {
         for (idx, hand) in hands.windows(2).enumerate() {
@@ -261,12 +245,9 @@ fn process_2(input: &str) -> String {
         }
         if let Some(idx) = swap_idx {
             // println!("inside swap");
-            //         // dbg!(&hands);
             hands.swap(idx, idx + 1);
-            //         // dbg!(&hands);
         }
     }
-    dbg!(&hands);
     let out: u32 = hands
         .iter()
         .enumerate()
