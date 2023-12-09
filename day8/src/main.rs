@@ -129,40 +129,10 @@ fn process_2(input: &str) -> String {
         })
         .collect::<Vec<usize>>();
 
-    // while !finished {
-    //     steps += 1;
-    //     idx += 1;
-    //     if idx > max_idx {
-    //         idx = 0;
-    //     }
-    //     dbg!(&keys);
-    //     let dir = directions_iter.next().unwrap();
-    //     for key in keys.iter_mut() {
-    //         let new_key = match dir {
-    // 'L' => map.get(key).unwrap().0.clone(),
-    // 'R' => map.get(key).unwrap().1.clone(),
-    // _ => panic!("Direction invalid"),
-    //         };
-    //         *key = new_key;
-    //     }
-    //     dbg!(&keys);
-    //     keys.iter().for_each(|k| {
-    //         if k.ends_with('Z') && cycles[idx] == 0 {
-    //             cycles[idx] = steps;
-    //             dbg!(&cycles[idx]);
-    //         }
-    //     });
-    //     dbg!(&cycles);
-    //     if cycles.iter().all(|k| *k != 0) {
-    //         finished = true;
-    //     }
-    // }
-    // dbg!(&cycles);
     let lcm = lcm(&result);
     lcm.to_string()
 }
 
-//
 pub fn lcm(nums: &[usize]) -> usize {
     if nums.len() == 1 {
         return nums[0];
