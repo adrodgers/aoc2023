@@ -1,12 +1,14 @@
-use std::{collections::BTreeMap, iter};
+use colored::Colorize;
+use colored::*;
+use std::collections::BTreeMap;
 
 fn main() {
-    let input1 = include_str!("./input1.txt");
-    let output1 = part_1(input1);
-    println!("{output1}");
-    // let input2 = include_str!("./input2.txt");
-    // let output2 = part_2(input2);
-    // println!("{output2}");
+    // let input1 = include_str!("./input1.txt");
+    // let output1 = part_1(input1);
+    // // println!("{output1}");
+    let input2 = include_str!("./input1.txt");
+    let output2 = part_2(input2);
+    println!("{output2}");
 }
 
 fn part_1(input: &str) -> String {
@@ -19,8 +21,8 @@ fn part_2(input: &str) -> String {
 fn process_1(input: &str) -> String {
     let y_max = input.lines().count();
     let x_max = input.lines().next().unwrap().len();
-    dbg!(y_max);
-    dbg!(x_max);
+    // dbg!(y_max);
+    // dbg!(x_max);
     let mut tiles: BTreeMap<(isize, isize), char> = BTreeMap::new();
     let mut start_pos: (isize, isize) = (0, 0);
     for (y, line) in input.lines().enumerate() {
@@ -32,14 +34,14 @@ fn process_1(input: &str) -> String {
                 // tiles.insert((x, y), 'F');
                 start_pos = (x as isize, y as isize);
                 tiles.insert((x as isize, y as isize), char);
-                // println!("S: {x},{y}");
+            //             // println!("S: {x},{y}");
             } else {
                 tiles.insert((x as isize, y as isize), char);
             }
         }
     }
-    dbg!(&start_pos);
-    dbg!(&tiles.get(&start_pos).unwrap());
+    // dbg!(&start_pos);
+    // dbg!(&tiles.get(&start_pos).unwrap());
 
     // replace start char
     let neighbors = [(-1, 0), (1, 0), (0, 1), (0, -1)];
@@ -50,22 +52,22 @@ fn process_1(input: &str) -> String {
                 start_pos.0.saturating_add(neighbor.0),
                 start_pos.1.saturating_add(neighbor.1),
             ));
-            dbg!(&char);
-            dbg!(&neighbor);
+            //         dbg!(&char);
+            //         dbg!(&neighbor);
             let pos = map_exit_position(
                 *char.unwrap(),
                 start_pos,
                 (start_pos.0 + neighbor.0, start_pos.1 + neighbor.1),
             );
-            dbg!(&pos);
+            //         dbg!(&pos);
             if pos.is_some() {
                 valid_neighbors.push((neighbor.0, neighbor.1));
             }
         }
     }
-    dbg!(&tiles);
-    dbg!(&tiles.get(&start_pos).unwrap());
-    dbg!(&valid_neighbors);
+    // dbg!(&tiles);
+    // dbg!(&tiles.get(&start_pos).unwrap());
+    // dbg!(&valid_neighbors);
     let mut prev_pos = (0, 0);
     if (valid_neighbors[0] == (-1, 0) || valid_neighbors[1] == (-1, 0))
         && (valid_neighbors[0] == (1, 0) || valid_neighbors[1] == (1, 0))
@@ -121,14 +123,14 @@ fn process_1(input: &str) -> String {
             valid_neighbors[0].1 + start_pos.1,
         );
     }
-    dbg!(&tiles.get(&start_pos).unwrap());
+    // dbg!(&tiles.get(&start_pos).unwrap());
 
     let mut pos = start_pos;
     let mut steps = 0;
     loop {
         steps += 1;
-        dbg!(&pos);
-        dbg!(&prev_pos);
+        //     dbg!(&pos);
+        //     dbg!(&prev_pos);
         let new_pos = map_exit_position(*tiles.get(&pos).unwrap(), prev_pos, pos);
         if new_pos.unwrap() == start_pos {
             break;
@@ -167,7 +169,228 @@ fn map_exit_position(
 }
 
 fn process_2(input: &str) -> String {
-    "".to_string()
+    let y_max = input.lines().count();
+    let x_max = input.lines().next().unwrap().len();
+    // dbg!(y_max);
+    // dbg!(x_max);
+    let mut tiles: BTreeMap<(isize, isize), char> = BTreeMap::new();
+    let mut start_pos: (isize, isize) = (0, 0);
+    for (y, line) in input.lines().enumerate() {
+        for (x, char) in line.chars().enumerate() {
+            if char == 'S' {
+                // J for real input
+                // tiles.insert((x, y), 'J');
+                // F for test input
+                // tiles.insert((x, y), 'F');
+                start_pos = (x as isize, y as isize);
+                tiles.insert((x as isize, y as isize), char);
+            //             // println!("S: {x},{y}");
+            } else {
+                tiles.insert((x as isize, y as isize), char);
+            }
+        }
+    }
+    // dbg!(&start_pos);
+    // dbg!(&tiles.get(&start_pos).unwrap());
+
+    // replace start char
+    let neighbors = [(-1, 0), (1, 0), (0, 1), (0, -1)];
+    let mut valid_neighbors: Vec<(isize, isize)> = Vec::new();
+    for neighbor in neighbors {
+        if (start_pos.0 + neighbor.0) > 0 && (start_pos.1 + neighbor.1) > 0 {
+            let char = tiles.get(&(
+                start_pos.0.saturating_add(neighbor.0),
+                start_pos.1.saturating_add(neighbor.1),
+            ));
+            //         dbg!(&char);
+            //         dbg!(&neighbor);
+            let pos = map_exit_position(
+                *char.unwrap(),
+                start_pos,
+                (start_pos.0 + neighbor.0, start_pos.1 + neighbor.1),
+            );
+            //         dbg!(&pos);
+            if pos.is_some() {
+                valid_neighbors.push((neighbor.0, neighbor.1));
+            }
+        }
+    }
+    // dbg!(&tiles);
+    // dbg!(&tiles.get(&start_pos).unwrap());
+    // dbg!(&valid_neighbors);
+    let mut prev_pos = (0, 0);
+    if (valid_neighbors[0] == (-1, 0) || valid_neighbors[1] == (-1, 0))
+        && (valid_neighbors[0] == (1, 0) || valid_neighbors[1] == (1, 0))
+    {
+        tiles.insert(start_pos, '-');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    if (valid_neighbors[0] == (0, 1) || valid_neighbors[1] == (0, 1))
+        && (valid_neighbors[0] == (0, -1) || valid_neighbors[1] == (0, -1))
+    {
+        tiles.insert(start_pos, '|');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    if (valid_neighbors[0] == (-1, 0) || valid_neighbors[1] == (-1, 0))
+        && (valid_neighbors[0] == (0, -1) || valid_neighbors[1] == (0, -1))
+    {
+        tiles.insert(start_pos, 'J');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    if (valid_neighbors[0] == (1, 0) || valid_neighbors[1] == (1, 0))
+        && (valid_neighbors[0] == (0, -1) || valid_neighbors[1] == (0, -1))
+    {
+        tiles.insert(start_pos, 'L');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    if (valid_neighbors[0] == (1, 0) || valid_neighbors[1] == (1, 0))
+        && (valid_neighbors[0] == (0, 1) || valid_neighbors[1] == (0, 1))
+    {
+        tiles.insert(start_pos, 'F');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    if (valid_neighbors[0] == (-1, 0) || valid_neighbors[1] == (-1, 0))
+        && (valid_neighbors[0] == (0, 1) || valid_neighbors[1] == (0, 1))
+    {
+        tiles.insert(start_pos, '7');
+        prev_pos = (
+            valid_neighbors[0].0 + start_pos.0,
+            valid_neighbors[0].1 + start_pos.1,
+        );
+    }
+    let mut pos = start_pos;
+    let mut steps = 0;
+    loop {
+        steps += 1;
+        let new_pos = map_exit_position(*tiles.get(&pos).unwrap(), prev_pos, pos);
+
+        tiles.insert(pos, 'P');
+        if new_pos.unwrap() == start_pos {
+            break;
+        }
+        prev_pos = pos;
+        pos = new_pos.unwrap();
+    }
+    let mut is_inside = 0;
+
+    for y in 0..y_max as isize {
+        for x in 0..x_max as isize {
+            let char = tiles.get(&(x as isize, y as isize)).unwrap();
+            if *char == 'P' {
+                continue;
+            }
+            let mut previous_char: Option<char> = None;
+            let mut pipe_crossings = 0;
+            for i in 0..x {
+                let c = tiles.get(&(i, y)).unwrap();
+                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
+                    continue;
+                }
+                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
+                    pipe_crossings += 1;
+                }
+                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
+                    pipe_crossings += 1;
+                }
+                previous_char = Some(*c);
+            }
+            if pipe_crossings % 2 == 0 {
+                continue;
+            }
+            // let mut previous_char: Option<char> = Some(*char);
+            let mut previous_char: Option<char> = None;
+            let mut pipe_crossings = 0;
+            for i in x + 1..x_max as isize {
+                let c = tiles.get(&(i, y)).unwrap();
+                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
+                    // previous_char = Some(*c);
+                    continue;
+                }
+                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
+                    pipe_crossings += 1;
+                }
+                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
+                    pipe_crossings += 1;
+                }
+                previous_char = Some(*c);
+            }
+            if pipe_crossings % 2 == 0 {
+                continue;
+            }
+            let mut previous_char: Option<char> = None;
+            let mut pipe_crossings = 0;
+            for j in 0..y {
+                let c = tiles.get(&(x, j)).unwrap();
+                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
+                    continue;
+                }
+                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
+                    pipe_crossings += 1;
+                }
+                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
+                    pipe_crossings += 1;
+                }
+                previous_char = Some(*c);
+            }
+            if pipe_crossings % 2 == 0 {
+                continue;
+            }
+            // let mut previous_char: Option<char> = Some(*char);
+            let mut previous_char: Option<char> = None;
+            let mut pipe_crossings = 0;
+            for j in y + 1..y_max as isize {
+                let c = tiles.get(&(x, j)).unwrap();
+                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
+                    continue;
+                }
+                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
+                    pipe_crossings += 1;
+                }
+                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
+                    pipe_crossings += 1;
+                }
+                previous_char = Some(*c);
+            }
+            if pipe_crossings % 2 == 0 {
+                continue;
+            }
+            is_inside += 1;
+            tiles.insert((x, y), '*');
+        }
+    }
+    dbg!(y_max);
+    dbg!(x_max);
+    for y in 0..y_max as isize {
+        println!("");
+        for x in 0..x_max as isize {
+            let char = *tiles.get(&(x, y)).unwrap();
+            if char == 'P' {
+                print!("{}", char.to_string().red());
+            } else if char == '*' {
+                print!("{}", char.to_string().yellow());
+            } else {
+                print!(" ");
+            }
+        }
+        println!("");
+    }
+
+    (is_inside).to_string()
 }
 
 #[cfg(test)]
@@ -178,15 +401,44 @@ mod tests {
 .|.|.
 .L-J.
 .....";
+    const EXAMPLE_TEXT_2: &str = "..........
+.S------7.
+.|F----7|.
+.||OOOO||.
+.||OOOO||.
+.|L-7F-J|.
+.|II||II|.
+.L--JL--J.
+..........";
+    const EXAMPLE_TEXT_3: &str = ".F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...";
 
+    // #[test]
+    // fn test_1() {
+    //     let output = part_1(EXAMPLE_TEXT);
+    //     assert_eq!(output, "4".to_string())
+    // }
+    // #[test]
+    // fn test_2() {
+    //     let output = part_2(EXAMPLE_TEXT);
+    //     assert_eq!(output, "1".to_string())
+    // }
     #[test]
-    fn test_1() {
-        let output = part_1(EXAMPLE_TEXT);
+    fn test_2_a() {
+        let output = part_2(EXAMPLE_TEXT_2);
         assert_eq!(output, "4".to_string())
     }
-    #[test]
-    fn test_2() {
-        let output = part_2(EXAMPLE_TEXT);
-        assert_eq!(output, "".to_string())
-    }
+    // #[test]
+    // fn test_2_b() {
+    //     let output = part_2(EXAMPLE_TEXT_3);
+    //     assert_eq!(output, "8".to_string())
+    // }
 }
