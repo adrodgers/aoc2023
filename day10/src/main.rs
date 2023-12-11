@@ -1,11 +1,10 @@
 use colored::Colorize;
-use colored::*;
 use std::collections::BTreeMap;
 
 fn main() {
-    // let input1 = include_str!("./input1.txt");
-    // let output1 = part_1(input1);
-    // // println!("{output1}");
+    let input1 = include_str!("./input1.txt");
+    let output1 = part_1(input1);
+    println!("{output1}");
     let input2 = include_str!("./input1.txt");
     let output2 = part_2(input2);
     println!("{output2}");
@@ -19,8 +18,8 @@ fn part_2(input: &str) -> String {
 }
 
 fn process_1(input: &str) -> String {
-    let y_max = input.lines().count();
-    let x_max = input.lines().next().unwrap().len();
+    // let y_max = input.lines().count();
+    // let x_max = input.lines().next().unwrap().len();
     // dbg!(y_max);
     // dbg!(x_max);
     let mut tiles: BTreeMap<(isize, isize), char> = BTreeMap::new();
@@ -277,120 +276,63 @@ fn process_2(input: &str) -> String {
     let mut steps = 0;
     loop {
         steps += 1;
-        let new_pos = map_exit_position(*tiles.get(&pos).unwrap(), prev_pos, pos);
+        let char = *tiles.get(&pos).unwrap();
+        let new_pos = map_exit_position(char, prev_pos, pos);
 
-        tiles.insert(pos, 'P');
+        if char == '|' || char == 'L' || char == 'J' {
+            tiles.insert(pos, 'N');
+        } else if char == '-' || char == 'F' || char == '7' {
+            tiles.insert(pos, 'S');
+        } else {
+            tiles.insert(pos, 'O');
+        }
+
         if new_pos.unwrap() == start_pos {
             break;
         }
         prev_pos = pos;
         pos = new_pos.unwrap();
     }
-    let mut is_inside = 0;
+    let mut is_inside_sum = 0;
 
     for y in 0..y_max as isize {
         for x in 0..x_max as isize {
-            let char = tiles.get(&(x as isize, y as isize)).unwrap();
-            if *char == 'P' {
+            let mut is_inside = false;
+            let char = tiles.get(&(x, y)).unwrap();
+            if *char == 'N' || *char == 'O' || *char == 'S' {
                 continue;
             }
-            let mut previous_char: Option<char> = None;
-            let mut pipe_crossings = 0;
+            // let mut pipe_crossings = 0;
             for i in 0..x {
                 let c = tiles.get(&(i, y)).unwrap();
-                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
-                    continue;
+                if c == &'N' {
+                    // pipe_crossings += 1;
+                    is_inside = !is_inside;
                 }
-                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
-                    pipe_crossings += 1;
-                }
-                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
-                    pipe_crossings += 1;
-                }
-                previous_char = Some(*c);
             }
-            if pipe_crossings % 2 == 0 {
-                continue;
+            if is_inside {
+                tiles.insert((x, y), '*');
+                is_inside_sum += 1;
             }
-            // let mut previous_char: Option<char> = Some(*char);
-            let mut previous_char: Option<char> = None;
-            let mut pipe_crossings = 0;
-            for i in x + 1..x_max as isize {
-                let c = tiles.get(&(i, y)).unwrap();
-                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
-                    // previous_char = Some(*c);
-                    continue;
-                }
-                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
-                    pipe_crossings += 1;
-                }
-                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
-                    pipe_crossings += 1;
-                }
-                previous_char = Some(*c);
-            }
-            if pipe_crossings % 2 == 0 {
-                continue;
-            }
-            let mut previous_char: Option<char> = None;
-            let mut pipe_crossings = 0;
-            for j in 0..y {
-                let c = tiles.get(&(x, j)).unwrap();
-                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
-                    continue;
-                }
-                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
-                    pipe_crossings += 1;
-                }
-                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
-                    pipe_crossings += 1;
-                }
-                previous_char = Some(*c);
-            }
-            if pipe_crossings % 2 == 0 {
-                continue;
-            }
-            // let mut previous_char: Option<char> = Some(*char);
-            let mut previous_char: Option<char> = None;
-            let mut pipe_crossings = 0;
-            for j in y + 1..y_max as isize {
-                let c = tiles.get(&(x, j)).unwrap();
-                if previous_char.is_some_and(|p| p == 'P') && *c == 'P' {
-                    continue;
-                }
-                if previous_char.is_some_and(|p| p != 'P') && *c == 'P' {
-                    pipe_crossings += 1;
-                }
-                if previous_char.is_some_and(|p| p == 'P') && *c != 'P' {
-                    pipe_crossings += 1;
-                }
-                previous_char = Some(*c);
-            }
-            if pipe_crossings % 2 == 0 {
-                continue;
-            }
-            is_inside += 1;
-            tiles.insert((x, y), '*');
         }
     }
     dbg!(y_max);
     dbg!(x_max);
     for y in 0..y_max as isize {
-        println!("");
+        println!();
         for x in 0..x_max as isize {
             let char = *tiles.get(&(x, y)).unwrap();
-            if char == 'P' {
+            if char == 'N' || char == 'O' || char == 'S' {
                 print!("{}", char.to_string().red());
             } else if char == '*' {
                 print!("{}", char.to_string().yellow());
             } else {
-                print!(" ");
+                print!("{}", char.to_string().blue());
             }
         }
-        println!("");
     }
 
-    (is_inside).to_string()
+    (is_inside_sum).to_string()
 }
 
 #[cfg(test)]
@@ -421,24 +363,19 @@ L--J.L7...LJS7F-7L7.
 ....FJL-7.||.||||...
 ....L---J.LJ.LJLJ...";
 
-    // #[test]
-    // fn test_1() {
-    //     let output = part_1(EXAMPLE_TEXT);
-    //     assert_eq!(output, "4".to_string())
-    // }
-    // #[test]
-    // fn test_2() {
-    //     let output = part_2(EXAMPLE_TEXT);
-    //     assert_eq!(output, "1".to_string())
-    // }
+    #[test]
+    fn test_1() {
+        let output = part_1(EXAMPLE_TEXT);
+        assert_eq!(output, "4".to_string())
+    }
     #[test]
     fn test_2_a() {
         let output = part_2(EXAMPLE_TEXT_2);
         assert_eq!(output, "4".to_string())
     }
-    // #[test]
-    // fn test_2_b() {
-    //     let output = part_2(EXAMPLE_TEXT_3);
-    //     assert_eq!(output, "8".to_string())
-    // }
+    #[test]
+    fn test_2_b() {
+        let output = part_2(EXAMPLE_TEXT_3);
+        assert_eq!(output, "8".to_string())
+    }
 }
