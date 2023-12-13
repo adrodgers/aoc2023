@@ -14,6 +14,7 @@ fn part_1(input: &str) -> String {
 }
 fn part_2(input: &str) -> String {
     // Part two requires a dynamic programming approach.
+    // e.g. https://gist.github.com/icub3d/7aa45ca96ccb88ebf95b91d6a28eba74
     process_2(input)
 }
 
@@ -59,6 +60,7 @@ fn possible_options(line: &str) -> u32 {
             .chars()
             .map(|c| match c {
                 // Part two requires a dynamic programming approach.
+                // e.g. https://gist.github.com/icub3d/7aa45ca96ccb88ebf95b91d6a28eba74
                 '?' => option_iter.next().unwrap(),
                 char => char,
             })
@@ -71,6 +73,7 @@ fn possible_options(line: &str) -> u32 {
     }
     valid_options
     // Part two requires a dynamic programming approach.
+    // e.g. https://gist.github.com/icub3d/7aa45ca96ccb88ebf95b91d6a28eba74
 }
 
 fn valid_option(option: &str, batches: Vec<usize>) -> bool {
