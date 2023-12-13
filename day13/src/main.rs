@@ -1,5 +1,3 @@
-// use itertools::Itertools;
-
 fn main() {
     let input1 = include_str!("./input1.txt");
     let output1 = part_1(input1);
@@ -68,7 +66,6 @@ impl Puzzle {
         for idx in 1..self.nrows {
             let left_iter = (0..idx).rev();
             let right_iter = idx..self.nrows;
-
             if left_iter
                 .zip(right_iter)
                 .all(|row| self.data[row.0] == self.data[row.1])
@@ -77,7 +74,6 @@ impl Puzzle {
                 break;
             }
         }
-
         reflection_index
     }
 
@@ -89,7 +85,6 @@ impl Puzzle {
         for idx in 1..self.ncols {
             let left_iter = (0..idx).rev();
             let right_iter = idx..self.ncols;
-
             if left_iter
                 .zip(right_iter)
                 .all(|col| data_transform[col.0] == data_transform[col.1])
@@ -98,13 +93,11 @@ impl Puzzle {
                 break;
             }
         }
-
         reflection_index
     }
 
     fn horizontal_reflection_p2(&self) -> usize {
         let original_reflection_horizontal = self.horizontal_reflection();
-
         let mut reflection_index = 0;
         'outer: for y in 0..self.nrows {
             for x in 0..self.ncols {
@@ -166,7 +159,6 @@ impl Puzzle {
         reflection_index
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -177,7 +169,6 @@ mod tests {
 ..#.##.#.
 ..##..##.
 #.#.##.#.
-
 #...##..#
 #....#..#
 ..##..###
@@ -185,7 +176,6 @@ mod tests {
 #####.##.
 ..##..###
 #....#..#";
-
     #[test]
     fn test_1() {
         let output = part_1(EXAMPLE_TEXT);
