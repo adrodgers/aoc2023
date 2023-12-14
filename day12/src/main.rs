@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use itertools::Itertools;
 
@@ -30,7 +30,7 @@ fn process_2(input: &str) -> String {
     let mut total_options = 0;
     for line in input.lines() {
         let mut split = line.split_whitespace();
-        let mut arr = split.next().unwrap();
+        let arr = split.next().unwrap();
         let dots = std::iter::repeat(arr).take(5).join("?");
         let batches: Vec<usize> = split
             .next()
@@ -64,13 +64,11 @@ fn dynamic_programming(
     }
     // if we are at the end of the pattern
     if i == dots.len() {
-        if bi == blocks.len() && current == 0 {
+        if (bi == blocks.len() && current == 0) || bi == (blocks.len() - 1) && blocks[bi] == current
+        {
             return 1;
-        } else if bi == (blocks.len() - 1) && blocks[bi] == current {
-            return 1;
-        } else {
-            return 0;
         }
+        return 0;
     }
     let mut ans = 0;
     for c in ['#', '.'].into_iter() {
@@ -101,7 +99,7 @@ fn possible_options(line: &str) -> u32 {
     let possible = ["#", "."];
     let unknown_indices: Vec<usize> = arr
         .char_indices()
-        .filter(|(i, c)| *c == '?')
+        .filter(|(_i, c)| *c == '?')
         .map(|c| c.0)
         .collect();
 
