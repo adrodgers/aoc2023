@@ -1,12 +1,12 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, os::unix::process};
 
 fn main() {
     let input1 = include_str!("./input1.txt");
     let output1 = part_1(input1);
     println!("{output1}");
-    // let input2 = include_str!("./input2.txt");
-    // let output2 = part_2(input2);
-    // println!("{output2}");
+    let input2 = include_str!("./input1.txt");
+    let output2 = part_2(input2);
+    println!("{output2}");
 }
 
 fn part_1(input: &str) -> String {
@@ -37,13 +37,10 @@ impl Direction {
 
 #[derive(Debug)]
 struct Laser {
-    // start_position: (isize, isize),
-    // start_direction: Direction,
     direction: Direction,
     current_position: (isize, isize),
     previous_positions: HashSet<(isize, isize)>,
-    is_complete: bool, // left_grid: bool,
-                       // is_loop: bool,
+    is_complete: bool,
 }
 
 impl Laser {
@@ -293,7 +290,82 @@ fn process_1(input: &str) -> String {
 }
 
 fn process_2(input: &str) -> String {
-    "".to_string()
+    let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
+    let x_max = grid.first().unwrap().len() as isize;
+    let y_max = grid.len() as isize;
+    let mut max_energized = 0;
+    for y in 0..y_max {
+        let energized = process(&grid, Direction::Right, (0, y));
+        if energized > max_energized {
+            max_energized = energized;
+        }
+    }
+    for y in 0..y_max {
+        let energized = process(&grid, Direction::Left, (x_max - 1, y));
+        if energized > max_energized {
+            max_energized = energized;
+        }
+    }
+    for x in 0..x_max {
+        let energized = process(&grid, Direction::Down, (x, 0));
+        if energized > max_energized {
+            max_energized = energized;
+        }
+    }
+    for x in 0..x_max {
+        let energized = process(&grid, Direction::Up, (x, x_max - 1));
+        if energized > max_energized {
+            max_energized = energized;
+        }
+    }
+    max_energized.to_string()
+}
+
+fn process(grid: &Vec<Vec<char>>, direction: Direction, point: (isize, isize)) -> usize {
+    let mut lasers: Vec<Laser> = vec![Laser {
+        direction: direction,
+        current_position: point,
+        previous_positions: HashSet::new(),
+        is_complete: false,
+    }];
+    let mut energized: HashSet<(isize, isize)> = HashSet::new();
+    let mut lasers_started: HashSet<(isize, isize, usize)> = HashSet::new();
+    loop {
+        if lasers.iter().all(|l| l.is_complete) {
+            break;
+        }
+        let mut new_lasers: Vec<Laser> = Vec::new();
+        for laser in lasers.iter_mut() {
+            let split_lasers = laser.next(&grid);
+            if split_lasers.is_some() {
+                for l in split_lasers.unwrap() {
+                    new_lasers.push(l);
+                }
+            }
+        }
+        for new_laser in new_lasers {
+            if lasers_started.contains(&(
+                new_laser.current_position.0,
+                new_laser.current_position.1,
+                new_laser.direction.to_usize(),
+            )) {
+                continue;
+            }
+
+            lasers_started.insert((
+                new_laser.current_position.0,
+                new_laser.current_position.1,
+                new_laser.direction.to_usize(),
+            ));
+            lasers.push(new_laser);
+        }
+    }
+    for laser in lasers.iter() {
+        for p in laser.previous_positions.clone() {
+            energized.insert(p);
+        }
+    }
+    energized.len()
 }
 
 #[cfg(test)]
