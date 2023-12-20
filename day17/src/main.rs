@@ -14,6 +14,7 @@ fn part_2(input: &str) -> String {
     process_2(input)
 }
 
+// https://github.com/jonathanpaulson/AdventOfCode/blob/master/2023/17.py
 fn process_1(input: &str) -> String {
     "".to_string()
 }
